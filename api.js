@@ -5,8 +5,8 @@ var ccm = require('../cache-chain-memory/index');
 var crypto = require('crypto');
 
 var chain = cc.chain({
-	ttl: 10000, // Setting default chain timeouts
-	stale: 10000 * 2
+	ttl: 2000, // Setting default chain timeouts
+	stale: 1000
 });
 
 var redisClient = redis.createClient();
@@ -50,10 +50,10 @@ function APIBackend() {
 
 	this.get = function(key, options, cb) {
 		if (aquireLock(key)) {
-			console.log('api!'); /// Simulates a
+			console.log('API Lock Aquired'); /// Simulates a
 			setTimeout(function() {
 				if(c % 2 == 0) {	// once in 2 request simulate API down state
-					cb(new cc.error.failedToRefresh);
+					cb(new cc.error.failedToRefresh(new Error('API Down:' + c)));
 				} else {
 					var v = produceValue(key);
 					cb(null, {
@@ -64,8 +64,7 @@ function APIBackend() {
 			}, 500);
 			c++;
 		} else {
-			cb(new cc.error.notFound)
-			//cb(new Error('Key not found'))
+			cb(new cc.error.failedToRefresh(new Error('Failed to aquire lock')));
 		}
 	};
 
@@ -81,14 +80,10 @@ layerMemory.append(layerRedis).append(fakeAPI);
 chain.append(layerMemory);
 
 setInterval(function() {
-	chain.get('key', {
-		ttl: 15000,
-		stale: 10000
-	}, function(err, reply) {
+	chain.get('key', function(err, reply) {
 		if (err) {
 			console.error(err);
-		} else {
-			console.log(reply);
 		}
+		console.log(reply);
 	})
 }, 100)
