@@ -49,24 +49,24 @@ function APIBackend() {
 	};
 
 	this.get = function(key, options, cb) {
-		if(c % 2 == 0) {	// once in 2 request simulate API down state
-			cb(new cc.error.failedToRefresh);
-		} else {
-			if (aquireLock(key)) {
-				console.log('api!'); /// Simulates a
-				setTimeout(function() {
+		if (aquireLock(key)) {
+			console.log('api!'); /// Simulates a
+			setTimeout(function() {
+				if(c % 2 == 0) {	// once in 2 request simulate API down state
+					cb(new cc.error.failedToRefresh);
+				} else {
 					var v = produceValue(key);
 					cb(null, {
 						v: produceValue(key)
 					});
-					clearLock(key);
-				}, 500);
-			} else {
-				cb(new cc.error.notFound)
-				//cb(new Error('Key not found'))
-			}
+				}
+				clearLock(key);
+			}, 500);
+			c++;
+		} else {
+			cb(new cc.error.notFound)
+			//cb(new Error('Key not found'))
 		}
-		c++;
 	};
 
 	this.delete = function(key, options, cb) {
