@@ -13,6 +13,9 @@ var redisClient = redis.createClient();
 var layerRedis = cc.layer(ccr(redisClient));
 var layerMemory = cc.layer(ccm());
 
+
+var c = 0;
+
 // Defining the API Adapter. In this case, the API is faked.
 
 function APIBackend() {
@@ -46,19 +49,24 @@ function APIBackend() {
 	};
 
 	this.get = function(key, options, cb) {
-
-		if (aquireLock(key)) {
-			console.log('api!'); /// Simulates a
-			setTimeout(function() {
-				var v = produceValue(key);
-				cb(null, {
-					v: produceValue(key)
-				});
-				clearLock(key);
-			}, 500);
+		if(c % 2 == 0) {	// once in 2 request simulate API down state
+			cb(new cc.error.failedToRefresh);
 		} else {
-			cb(new Error('Key not found'))
+			if (aquireLock(key)) {
+				console.log('api!'); /// Simulates a
+				setTimeout(function() {
+					var v = produceValue(key);
+					cb(null, {
+						v: produceValue(key)
+					});
+					clearLock(key);
+				}, 500);
+			} else {
+				cb(new cc.error.notFound)
+				//cb(new Error('Key not found'))
+			}
 		}
+		c++;
 	};
 
 	this.delete = function(key, options, cb) {

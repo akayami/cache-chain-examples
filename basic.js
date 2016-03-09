@@ -4,8 +4,8 @@ var ccr = require('cache-chain-redis');
 var ccm = require('cache-chain-memory');
 
 var chain = cc.chain({
-	ttl: 10000,			// Setting default chain timeouts
-	stale: 10000 * 2
+	ttl: 10000 * 10,			// Setting default chain timeouts
+	stale: 10000
 });
 
 var redisClient = redis.createClient();
