@@ -1,17 +1,20 @@
 {
-  "name": "test-cache-examples",
-  "version": "1.0.1",
-  "description": "Small examples for cache-chain",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "cache-chain": "0.0.3",
-    "cache-chain-memory": "0.0.3",
-    "cache-chain-redis": "0.0.3",
-    "redis": "^2.4.2"
-  }
+	"name": "test-cache-examples",
+	"version": "1.0.1",
+	"description": "Small examples for cache-chain",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"cache-chain": "0.0.4",
+		"cache-chain-memory": "0.0.4",
+		"cache-chain-redis": "0.0.4",
+		"redis": "^2.4.2"
+	},
+	"engine": {
+		"node": ">5.0.0"
+	}
 }

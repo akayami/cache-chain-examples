@@ -1,7 +1,7 @@
 var redis = require('redis');
-var cc = require('../cache-chain/index');
-var ccr = require('../cache-chain-redis/index');
-var ccm = require('../cache-chain-memory/index');
+var cc = require('cache-chain/index');
+var ccr = require('cache-chain-redis/index');
+var ccm = require('cache-chain-memory/index');
 var crypto = require('crypto');
 
 var chain = cc.chain({
